@@ -12,7 +12,7 @@ class WordPipeline(object):
     words_to_filter = [u'PRO', u'[유튜브]', u'[채용 정보]', u'【알립니다】']
     def process_item(self, item, spider):
         for word in self.words_to_filter:
-            if any(key in item['title'] for key in self.words_to_filter):
+            if any(key in item['site_subject'] for key in self.words_to_filter):
                 raise DropItem()
             else:
                 return item
