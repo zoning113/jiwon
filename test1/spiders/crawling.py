@@ -43,10 +43,11 @@ class NewsCrawlingSpider(scrapy.Spider):
     # 24시간 이내의 기사들의 본문과 타이틀을 파싱한다.
     def parse_hankyungesg2(self, response):
         item = response.meta['item']
-        item['site_subject'] = response.xpath('//*[@id="container"]/div/div/article/h1/text()').extract()
+        item['site_subject'] = response.xpath('//*[@id="container"]/div/div/article/h1/text()').extract()[0].strip()
         for sel in response.xpath('//*[@id="articletext"]'):
-            item['site_content'] = response.xpath('text()').extract()
+            item['site_content'] = sel.xpath('text()').extract()
         #//*[@id="articletxt"]
         #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[2]/div/h2/a
         #//*[@id="articletxt"]/text()[1]
+        #//*[@id="articletxt"]
         yield item
