@@ -90,5 +90,3 @@ ITEM_PIPELINES = {
 
 LOG_FILE = 'scrapy.log'
 # LOG_LEVEL='ERROR'
-
-REQUEST_FINGERPRINTER_IMPLEMENTATION = 'your_preferred_value'
