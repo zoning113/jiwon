@@ -10,10 +10,10 @@ class NewsCrawlingSpider(scrapy.Spider):
     # 크롤링 페이지를 요청한다 (페이지네이션으로 이루어진 페이지는 2 페이지까지 요청)
     def start_requests(self):
         for i in range(1, 2):
-            yield scrapy.Request("https://www.hankyung.com/esg/now?page=%d" % i, self.parse_hankyung)                          # 한경ESG
+            yield scrapy.Request("https://www.hankyung.com/esg/now?page=%d" % i, self.parse_hankyungesg)                          # 한경ESG
 
     # 뉴스 리스트 페이지에서 24시간 이내의 기사만 선별 후 해당 기사 페이지를 요청한다. (뉴스 리스트 페이지에서 'link', 'category' 'date' 데이터 파싱 후 callback)
-    def parse_hankyung(self, response):
+    def parse_hankyungesg(self, response):
         for sel in response.xpath('//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]'):
             #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]
             news_date = parse(sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip())
@@ -35,16 +35,18 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item['site_image'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
-                request = scrapy.Request(item['site_source'], callback=self.parse_hankyung2)
+                item['site_name'] = 'hankyungesg'
+                request = scrapy.Request(item['site_source'], callback=self.parse_hankyungesg2)
                 request.meta['item'] = item
                 yield request
 
     # 24시간 이내의 기사들의 본문과 타이틀을 파싱한다.
-    def parse_hankyung2(self, response):
+    def parse_hankyungesg2(self, response):
         item = response.meta['item']
         item['site_subject'] = response.xpath('//*[@class="article container v2"]/h1/text()').extract()
         #//*[@id="container"]/div/div/article/h1
         item['site_content'] = response.xpath('//*[@id="article-body"]/div/text()').extract()
+        item['site_content'] = [text.strip() for text in item['site_content'] if text.strip()]
         #//*[@id="articletxt"]
         #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[2]/div/h2/a
         yield item
