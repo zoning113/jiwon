@@ -24,14 +24,8 @@ class NewsCrawlingSpider(scrapy.Spider):
                 #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]/div/h2/a
                 item['content_section'] = 'Gen'
                 item['created_at'] = sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip()
-                #image 유무 확인
-                #it_has_image = response.xpath('.//div[@class="section-news-wrap"]/ul/li/div[@class="thumb"]')
-                #if it_has_image:
-                    #item['site_image'] = True
-                    #item['site_image'] = sel.xpath('a/img/@src').extract()[0].strip()
-                #else:
-                    #item['site_image'] = False
-                #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[5]/div[2]/a/img
+                #site_image 유무 확인 필요함
+                #extract..first...
                 item['site_image'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
@@ -44,10 +38,8 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_hankyungesg2(self, response):
         item = response.meta['item']
         item['site_subject'] = response.xpath('//*[@id="container"]/div/div/article/h1/text()').extract()[0].strip()
-        for sel in response.xpath('//*[@id="articletext"]'):
-            item['site_content'] = sel.xpath('text()').extract()
-        #//*[@id="articletxt"]
-        #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[2]/div/h2/a
-        #//*[@id="articletxt"]/text()[1]
-        #//*[@id="articletxt"]
+        item['site_content'] = response.xpath('//*[@id="articletxt"]/text()').extract()
+        #for sel in response.xpath('div[@class="article-body"]'):
+            #item['site_content'] = sel.xpath('text()').extract()
+
         yield item
