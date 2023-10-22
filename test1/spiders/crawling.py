@@ -28,10 +28,10 @@ class NewsCrawlingSpider(scrapy.Spider):
                 it_has_image = response.xpath('.//div[@class="section-news-wrap"]/ul/li/div[@class="thumb"]')
                 if it_has_image:
                     item['site_image'] = True
-                    item['site_image'] = sel.xpath('.//div[@class="thumb"]/a/img/@src').extract()[0].strip()
+                    item['site_image'] = sel.xpath('a/img/@src').extract()[0].strip()
                 else:
                     item['site_image'] = False
-                #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[5]/div[2]
+                #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[5]/div[2]/a/img
                 #item['site_image'] = sel.xpath('a/img/@src').extract()[0].strip()
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
