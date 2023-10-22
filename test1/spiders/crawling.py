@@ -27,7 +27,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 #image 유무 확인
                 it_has_image = response.xpath('.//div[@class="section-news-wrap"]/ul/li/div[@class="thumb"]')
                 if it_has_image:
-                    item['site image'] = True
+                    item['site_image'] = True
                     item['site_image'] = sel.xpath('.//div[@class="thumb"]/a/img/@src').extract()[0].strip()
                 else:
                     item['site_image'] = False
