@@ -32,7 +32,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 #else:
                     #item['site_image'] = False
                 #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[5]/div[2]/a/img
-                item['site_image'] = sel.xpath('a/img/@src').extract()[0].strip()
+                item['site_image'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
                 request = scrapy.Request(item['site_source'], callback=self.parse_hankyung2)
