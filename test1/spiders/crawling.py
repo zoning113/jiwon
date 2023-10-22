@@ -24,9 +24,15 @@ class NewsCrawlingSpider(scrapy.Spider):
                 #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]/div/h2/a
                 item['content_section'] = 'Gen'
                 item['created_at'] = sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip()
-                #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]/div/span
-                item['site_image'] = sel.xpath('a/img/@src').extract()[0].strip()
-                #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[3]/div[2]/a/img
+                #image 유무 확인
+                it_has_image = response.xpath('.//div[@class="section-news-wrap"]/ul/li/div[@class="thumb"]')
+                if it_has_image:
+                    item['site image'] = True
+                    item['site_image'] = sel.xpath('.//div[@class="thumb"]/a/img/@src').extract()[0].strip()
+                else:
+                    item['site_image'] = False
+                #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[5]/div[2]
+                #item['site_image'] = sel.xpath('a/img/@src').extract()[0].strip()
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
                 request = scrapy.Request(item['site_source'], callback=self.parse_hankyung2)
