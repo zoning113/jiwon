@@ -14,7 +14,7 @@ class NewsCrawlingSpider(scrapy.Spider):
 
     # 뉴스 리스트 페이지에서 24시간 이내의 기사만 선별 후 해당 기사 페이지를 요청한다. (뉴스 리스트 페이지에서 'link', 'category' 'date' 데이터 파싱 후 callback)
     def parse_hankyungesg(self, response):
-        for sel in response.xpath('//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]'):
+        for sel in response.xpath('//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li'):
             #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]
             news_date = parse(sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip())
             #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]/div/span
