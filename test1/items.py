@@ -6,15 +6,13 @@
 import scrapy
 
 class NewsCrawlingItem(scrapy.Item):
-    title = scrapy.Field()
-    link = scrapy.Field()
-    image_url = scrapy.Field()
-    category = scrapy.Field()
-    content = scrapy.Field()
-    date = scrapy.Field()
+    site_name = scrapy.Field()
+    site_subject = scrapy.Field()
+    site_content = scrapy.Field()
+    site_source = scrapy.Field()
+    site_image = scrapy.Field()
+    contents_type = scrapy.Field()
+    content_section = scrapy.Field()
+    created_at = scrapy.Field()
     site_location = scrapy.Field()
-    site_organizer = scrapy.Field()
-    site_type = scrapy.Field()
-    sentiment = scrapy.Field()
-    confidence = scrapy.Field()
     
