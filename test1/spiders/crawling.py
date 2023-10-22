@@ -44,7 +44,7 @@ class NewsCrawlingSpider(scrapy.Spider):
         item = response.meta['item']
         item['site_subject'] = response.xpath('//*[@class="article container v2"]/h1/text()').extract()
         #//*[@id="container"]/div/div/article/h1
-        item['site_content'] = response.xpath('//*[@id="article-body]/div/text()').extract()
+        item['site_content'] = response.xpath('//*[@id="article-body"]/div/text()').extract()
         #//*[@id="articletxt"]
         #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[2]/div/h2/a
         yield item
