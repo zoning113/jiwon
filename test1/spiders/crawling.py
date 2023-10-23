@@ -12,6 +12,7 @@ class NewsCrawlingSpider(scrapy.Spider):
         for i in range(1, 2):
             yield scrapy.Request("https://www.hankyung.com/esg/now?page=%d" % i, self.parse_hankyungesg)                          # 한경ESG
             yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=62324&box_idxno=&sc_section_code=S1N62&view_type=sm" % i, self.parse_gpkor_green)    #그린포스트코리아_녹색경제
+            yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=4937&box_idxno=&sc_section_code=S1N61&view_type=sm" % i, self.parse_gpkor_esgmanage) #그린포스트코리아_ESG경영
 
     #한경ESG
     # 뉴스 리스트 페이지에서 24시간 이내의 기사만 선별 후 해당 기사 페이지를 요청한다. (뉴스 리스트 페이지에서 'link', 'category' 'date' 데이터 파싱 후 callback)
@@ -41,7 +42,6 @@ class NewsCrawlingSpider(scrapy.Spider):
         yield item
 
     #그린포스트코리아_녹색경제
-    #//*[@id="section-list"]/ul/li[1]/a/img
     def parse_gpkor_green(self, response):
         for sel in response.xpath('//*[@id="section-list"]/ul/li'):
             news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
@@ -61,7 +61,31 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_gpkor_green2(self, response):
         item = response.meta['item']
         item['site_subject'] = response.xpath('//*[@id="article-view"]/div/header/h3/text()').extract()[0].strip()
-        #item['site_content'] = response.xpath('//*[@id="article-view-content-div"]/text()').extract()
+        for sel in response.xpath('//*[@id="article-view-content-div"]'):
+            item['site_content'] = sel.xpath('p/text()').extract()
+        yield item
+
+    #그린포스트코리아_ESG경영
+    
+    def parse_gpkor_esgmanage(self, response):
+        for sel in response.xpath('//*[@id="section-list"]/ul/li'):
+            news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
+            if self.now - news_date < dt.timedelta(days=1):
+                item = NewsCrawlingItem()
+                item['site_source'] = 'https://www.greenpostkorea.co.kr' + sel.xpath('.//div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1]
+                item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0].strip()
+                item['content_section'] = 'Gen'
+                item['site_location'] = 'KR'
+                item['contents_type'] = 'news'
+                item['site_name'] = '그린포스트코리아'
+                request = scrapy.Request(item['site_source'], callback=self.parse_gpkor_esgmanage2)
+                request.meta['item'] = item
+                yield request
+
+    def parse_gpkor_esgmanage2(self, response):
+        item = response.meta['item']
+        item['site_subject'] = response.xpath('//*[@id="article-view"]/div/header/h3/text()').extract()[0].strip()
         for sel in response.xpath('//*[@id="article-view-content-div"]'):
             item['site_content'] = sel.xpath('p/text()').extract()
         yield item
