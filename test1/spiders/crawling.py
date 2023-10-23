@@ -17,13 +17,10 @@ class NewsCrawlingSpider(scrapy.Spider):
     # 뉴스 리스트 페이지에서 24시간 이내의 기사만 선별 후 해당 기사 페이지를 요청한다. (뉴스 리스트 페이지에서 'link', 'category' 'date' 데이터 파싱 후 callback)
     def parse_hankyungesg(self, response):
         for sel in response.xpath('//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li'):
-            #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]
             news_date = parse(sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip())
-            #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]/div/span
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = sel.xpath('div[@class="txt-cont"]/h2/a/@href').extract()[0].strip()
-                #//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li[1]/div/h2/a
                 item['created_at'] = sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip().split(maxsplit=1)[1]
                 #site_image 유무 확인 필요함
                 item['site_image'] = None
@@ -40,21 +37,19 @@ class NewsCrawlingSpider(scrapy.Spider):
         item = response.meta['item']
         item['site_subject'] = response.xpath('//*[@id="container"]/div/div/article/h1/text()').extract()[0].strip()
         item['site_content'] = response.xpath('//*[@id="articletxt"]/text()').extract()
-        #for sel in response.xpath('div[@class="article-body"]'):
-            #item['site_content'] = sel.xpath('text()').extract()
 
         yield item
 
     #그린포스트코리아_녹색경제
-    #//*[@id="section-list"]/ul/li[2]/div/h4/a
+    #//*[@id="section-list"]/ul/li[1]/a/img
     def parse_gpkor_green(self, response):
         for sel in response.xpath('//*[@id="section-list"]/ul/li'):
             news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
-                item['site_source'] = 'https://www.greenpostkorea.co.kr' + sel.xpath('//*[@id="section-list"]/ul/li/div/h4/a/@href').extract()[0].strip()
+                item['site_source'] = 'https://www.greenpostkorea.co.kr' + sel.xpath('.//div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1]
-                item['site_image'] = sel.xpath('//*[@id="section-list"]/ul/li/a/img/@src').extract()[0].strip()
+                item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0].strip()
                 item['content_section'] = 'E'
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
@@ -69,5 +64,4 @@ class NewsCrawlingSpider(scrapy.Spider):
         #item['site_content'] = response.xpath('//*[@id="article-view-content-div"]/text()').extract()
         for sel in response.xpath('//*[@id="article-view-content-div"]'):
             item['site_content'] = sel.xpath('p/text()').extract()
-
         yield item
