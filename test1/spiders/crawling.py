@@ -18,7 +18,9 @@ class NewsCrawlingSpider(scrapy.Spider):
             #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=2151&box_idxno=&sc_section_code=S1N18&view_type=sm" % i, self.parse_greened_plan) #녹색경제신문_ESG기획
             #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=556&box_idxno=&sc_section_code=S1N28&view_type=sm" % i, self.parse_greened_trend) #녹색경제신문_ESG동향
             #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=3738&box_idxno=&sc_section_code=S1N29&view_type=sm" % i, self.parse_greened_economy) #녹색경제신문_함께하는경제
-            yield scrapy.Request("https://www.newsway.co.kr/esg/environment", self.parse_newsway_env) #ESG경영_친환경
+            #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=1836&box_idxno=&sc_section_code=S1N1&view_type=sm" % i, self.parse_impacton_indus) #임팩트온_산업
+            #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=945&box_idxno=&sc_section_code=S1N2&view_type=sm" % i, self.parse_impacton_policy) #임팩트온_정책
+            yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=657&box_idxno=&sc_section_code=S1N9&view_type=sm" % i, self.parse_impacton_inv) #임팩트온_투자&평가
 
 
     #한경ESG
@@ -221,27 +223,77 @@ class NewsCrawlingSpider(scrapy.Spider):
 
         yield item
 
-    #뉴스웨이
-    def parse_newsway_env(self, response):
-        for sel in response.xpath(''):
-            news_date = parse(sel.xpath('').extract()[0].strip())
+    #임팩트온_산업
+    def parse_impacton_indus(self, response):
+        for sel in response.xpath('//*[@id="section-list"]/ul/li'):
+            news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
-                item['site_source'] = '' + sel.xpath('').extract()[0].strip()
-                item['created_at'] = sel.xpath('').extract()[0].split('|')[2].split(maxsplit=1)[1].strip()
-                item['site_image'] = sel.xpath('"]/@style').extract()[0]
+                item['site_source'] = 'https://www.impacton.net' + sel.xpath('.//div[@class="view-cont"]/h2/a/@href').extract()[0].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
-                item['site_name'] = '뉴스웨이'
-                request = scrapy.Request(item['site_source'], callback=self.parse_newsway_env2)
+                item['site_name'] = '임팩트온'
+                request = scrapy.Request(item['site_source'], callback=self.parse_impacton_indus2)
                 request.meta['item'] = item
                 yield request
     
-    def parse_newsway_env2(self, response):
+    def parse_impacton_indus2(self, response):
         item = response.meta['item']
-        item['site_subject'] = response.xpath('').extract()[0].strip()
-        for sel in response.xpath(''):
-            item['site_content'] = sel.xpath('').extract()
+        item['site_subject'] = response.xpath('//*[@id="article-view"]/div/header/h1/text()').extract()[0].strip()
+        for sel in response.xpath('//*[@id="article-view-content-div"]'):
+            item['site_content'] = sel.xpath('p/text()').extract()
+
+        yield item
+
+    #임팩트온_정책
+    def parse_impacton_policy(self, response):
+        for sel in response.xpath('//*[@id="section-list"]/ul/li'):
+            news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
+            if self.now - news_date < dt.timedelta(days=1):
+                item = NewsCrawlingItem()
+                item['site_source'] = 'https://www.impacton.net' + sel.xpath('.//div[@class="view-cont"]/h2/a/@href').extract()[0].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
+                item['content_section'] = None
+                item['site_location'] = 'KR'
+                item['contents_type'] = 'news'
+                item['site_name'] = '임팩트온'
+                request = scrapy.Request(item['site_source'], callback=self.parse_impacton_policy2)
+                request.meta['item'] = item
+                yield request
+    
+    def parse_impacton_policy2(self, response):
+        item = response.meta['item']
+        item['site_subject'] = response.xpath('//*[@id="article-view"]/div/header/h1/text()').extract()[0].strip()
+        for sel in response.xpath('//*[@id="article-view-content-div"]'):
+            item['site_content'] = sel.xpath('p/text()').extract()
+
+        yield item
+
+    #임팩트온_투자&평가
+    def parse_impacton_inv(self, response):
+        for sel in response.xpath('//*[@id="section-list"]/ul/li'):
+            news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
+            if self.now - news_date < dt.timedelta(days=2):
+                item = NewsCrawlingItem()
+                item['site_source'] = 'https://www.impacton.net' + sel.xpath('.//div[@class="view-cont"]/h2/a/@href').extract()[0].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
+                item['content_section'] = None
+                item['site_location'] = 'KR'
+                item['contents_type'] = 'news'
+                item['site_name'] = '임팩트온'
+                request = scrapy.Request(item['site_source'], callback=self.parse_impacton_inv2)
+                request.meta['item'] = item
+                yield request
+    
+    def parse_impacton_inv2(self, response):
+        item = response.meta['item']
+        item['site_subject'] = response.xpath('//*[@id="article-view"]/div/header/h1/text()').extract()[0].strip()
+        for sel in response.xpath('//*[@id="article-view-content-div"]'):
+            item['site_content'] = sel.xpath('p/text()').extract()
 
         yield item
