@@ -385,7 +385,7 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_esgeconomy_env(self, response):
         for sel in response.xpath('//*[@id="section-list"]/ul/li'):
             news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
-            if self.now - news_date < dt.timedelta(days=3):
+            if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
@@ -410,7 +410,7 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_esgeconomy_soc(self, response):
         for sel in response.xpath('//*[@id="section-list"]/ul/li'):
             news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
-            if self.now - news_date < dt.timedelta(days=16):
+            if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
