@@ -23,10 +23,11 @@ class NewsCrawlingSpider(scrapy.Spider):
             #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=657&box_idxno=&sc_section_code=S1N9&view_type=sm" % i, self.parse_impacton_inv) #임팩트온_투자&평가
             #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=492&box_idxno=&sc_sub_section_code=S2N14&view_type=sm" % i, self.parse_impacton_issue) #임팩트온_이슈핫클립
             #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=1054&box_idxno=&sc_section_code=S1N1&view_type=sm" % i, self.parse_esgeconomy_sus) #ESG경제_지속가능경제
-            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=621&box_idxno=&sc_section_code=S1N2&view_type=sm" % i, self.parse_esgeconomy_env) #ESG경제_환경사회
-            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=861&box_idxno=&sc_section_code=S1N8&view_type=sm" % i, self.parse_esgeconomy_gov) #ESG경제_기업거버넌스
-            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=672&box_idxno=&sc_section_code=S1N5&view_type=sm" % i, self.parse_esgeconomy_ass) #ESG경제_공시평가
-            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=107&box_idxno=&sc_section_code=S1N7&view_type=sm" % i, self.parse_esgeconomy_opi) #ESG경제_오피니언
+            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=537&box_idxno=&sc_sub_section_code=S2N3&view_type=sm" % i, self.parse_esgeconomy_env) #ESG경제_환경
+            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=69&box_idxno=&sc_sub_section_code=S2N4&view_type=sm" % i, self.parse_esgeconomy_soc) #ESG경제_사회
+            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=861&box_idxno=&sc_section_code=S1N8&view_type=sm" % i, self.parse_esgeconomy_gov) #ESG경제_기업거버넌스
+            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=672&box_idxno=&sc_section_code=S1N5&view_type=sm" % i, self.parse_esgeconomy_ass) #ESG경제_공시평가
+            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=107&box_idxno=&sc_section_code=S1N7&view_type=sm" % i, self.parse_esgeconomy_opi) #ESG경제_오피니언
 
 
     #한경ESG
@@ -380,7 +381,7 @@ class NewsCrawlingSpider(scrapy.Spider):
 
         yield item
 
-    #ESG경제_환경사회
+    #ESG경제_환경
     def parse_esgeconomy_env(self, response):
         for sel in response.xpath('//*[@id="section-list"]/ul/li'):
             news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
@@ -405,16 +406,41 @@ class NewsCrawlingSpider(scrapy.Spider):
 
         yield item
 
-    #ESG경제_기업거버넌스
-    def parse_esgeconomy_gov(self, response):
+    #ESG경제_사회
+    def parse_esgeconomy_soc(self, response):
         for sel in response.xpath('//*[@id="section-list"]/ul/li'):
             news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
-            if self.now - news_date < dt.timedelta(days=2):
+            if self.now - news_date < dt.timedelta(days=16):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
-                item['content_section'] = 'E'
+                item['content_section'] = 'S'
+                item['site_location'] = 'KR'
+                item['contents_type'] = 'news'
+                item['site_name'] = 'ESG경제'
+                request = scrapy.Request(item['site_source'], callback=self.parse_esgeconomy_soc2)
+                request.meta['item'] = item
+                yield request
+
+    def parse_esgeconomy_soc2(self, response):
+        item = response.meta['item']
+        item['site_subject'] = response.xpath('//*[@id="article-view"]/div/header/h3/text()').extract()[0].strip()
+        for sel in response.xpath('//*[@id="article-view-content-div"]'):
+            item['site_content'] = sel.xpath('p/text()').extract()
+
+        yield item
+
+    #ESG경제_기업거버넌스
+    def parse_esgeconomy_gov(self, response):
+        for sel in response.xpath('//*[@id="section-list"]/ul/li'):
+            news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
+            if self.now - news_date < dt.timedelta(days=1):
+                item = NewsCrawlingItem()
+                item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
+                item['content_section'] = 'G'
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
                 item['site_name'] = 'ESG경제'
@@ -439,7 +465,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
-                item['content_section'] = 'E'
+                item['content_section'] = 'Gen'
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
                 item['site_name'] = 'ESG경제'
@@ -459,14 +485,14 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_esgeconomy_opi(self, response):
         for sel in response.xpath('//*[@id="section-list"]/ul/li'):
             news_date = parse(sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip())
-            if self.now - news_date < dt.timedelta(days=4):
+            if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
-                item['content_section'] = 'E'
+                item['content_section'] = None
                 item['site_location'] = 'KR'
-                item['contents_type'] = 'news'
+                item['contents_type'] = None #알림/칼럼 분류 필요함
                 item['site_name'] = 'ESG경제'
                 request = scrapy.Request(item['site_source'], callback=self.parse_esgeconomy_opi2)
                 request.meta['item'] = item
