@@ -63,7 +63,9 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
+    'test1.pipelines.ContentPipeline': 100,
     'test1.pipelines.WordPipeline': 200,
+    #'test1.pipelines.DatePipeline': 200,
 #숫자가 낮을 수록 우선순위
 }
 

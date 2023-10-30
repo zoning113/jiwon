@@ -18,7 +18,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             #yield scrapy.Request("http://www.hansbiz.co.kr/news/articleList.html?page=%d&total=1228&box_idxno=&sc_section_code=S1N37&view_type=sm" % i, self.parse_hansbiz) #한스비즈
             #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=2151&box_idxno=&sc_section_code=S1N18&view_type=sm" % i, self.parse_greened_plan) #녹색경제신문_ESG기획
             yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=556&box_idxno=&sc_section_code=S1N28&view_type=sm" % i, self.parse_greened_trend) #녹색경제신문_ESG동향
-            yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=3738&box_idxno=&sc_section_code=S1N29&view_type=sm" % i, self.parse_greened_economy) #녹색경제신문_함께하는경제
+            #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=3738&box_idxno=&sc_section_code=S1N29&view_type=sm" % i, self.parse_greened_economy) #녹색경제신문_함께하는경제
             #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=1836&box_idxno=&sc_section_code=S1N1&view_type=sm" % i, self.parse_impacton_indus) #임팩트온_산업
             #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=945&box_idxno=&sc_section_code=S1N2&view_type=sm" % i, self.parse_impacton_policy) #임팩트온_정책
             #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=657&box_idxno=&sc_section_code=S1N9&view_type=sm" % i, self.parse_impacton_inv) #임팩트온_투자&평가
