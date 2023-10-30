@@ -7,23 +7,21 @@ from db_import import import_data_to_db
 from datetime import datetime, timedelta
 
 
-#1. 제목/내용 문장 잇기
+# 1. 제목/내용 문장 잇기
 class ContentPipeline:
     def process_item(self, item, spider):
         if 'site_content' in item:
-            #item['site_content'] = ' '.join(item['site_content'])
             item['site_content'] = [' '.join(text.strip() for text in item['site_content'] if text.strip())] #2번
         return item
 
-#2. 제목/내용 쓸데없는 \n \t 등 특수문자 제외하기(위 코드와 병합)
+# 2. 제목/내용 쓸데없는 \n \t 등 특수문자 제외하기(위 코드와 병합)
 #item['site_content'] = [text.strip() for text in item['site_content'] if text.strip()]     # 공백 문자열 삭제
-
-#from bs4 import BeautifulSoup                  #구글링
+#from bs4 import BeautifulSoup                                                              # 구글링
 #def remove_html_tags(text):
     #soup = BeautifulSoup(text, "html.parser")
     #return soup.get_text()
 
-#3. 날짜 형식 통일
+# 3. 날짜 형식 통일
 #date_formats 모든 형태 입력 & "%Y-%m-%d %H:%M" 통일 형태 논의
 class DatePipeline:
     def process_item(self, item, spider):
@@ -48,7 +46,7 @@ class DatePipeline:
 
 
 
-#4. 중복 글 제거
+# 4. 중복 글 제거
 import hashlib
 class DuplicateItemFilterPipeline:
     def __init__(self):
@@ -67,7 +65,7 @@ class DuplicateItemFilterPipeline:
             self.processed_items.add(item_hash)
             return item
 
-#5. 키워드 중심으로 무관한 주제 글 제외
+# 5. 키워드 중심으로 무관한 주제 글 제외
 # 크롤링 된 title 에서 불필요한 words 필터
 class WordPipeline(object):
     words_to_filter = [u'PRO', u'[유튜브]', u'[채용 정보]', u'【알립니다】', u'podcast', u'Webinar', u'Exclusive Video:']
