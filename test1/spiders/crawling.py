@@ -11,14 +11,14 @@ class NewsCrawlingSpider(scrapy.Spider):
     def start_requests(self):
         #yield scrapy.Request("https://www.newsway.co.kr/esg/environment", self.parse_newsway) #뉴스웨이
         for i in range(1, 2):
-            yield scrapy.Request("https://www.hankyung.com/esg/now?page=%d" % i, self.parse_hankyungesg)                          # 한경ESG
+            #yield scrapy.Request("https://www.hankyung.com/esg/now?page=%d" % i, self.parse_hankyungesg)                          # 한경ESG
             #yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=62324&box_idxno=&sc_section_code=S1N62&view_type=sm" % i, self.parse_gpkor_green)    #그린포스트코리아_녹색경제
             #yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=4937&box_idxno=&sc_section_code=S1N61&view_type=sm" % i, self.parse_gpkor_esgmanage) #그린포스트코리아_ESG경영
             #yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=9564&box_idxno=&sc_section_code=S1N65&view_type=sm" % i, self.parse_gpkor_esgfinance) #그린포스트코리아_ESG금융
             #yield scrapy.Request("http://www.hansbiz.co.kr/news/articleList.html?page=%d&total=1228&box_idxno=&sc_section_code=S1N37&view_type=sm" % i, self.parse_hansbiz) #한스비즈
             #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=2151&box_idxno=&sc_section_code=S1N18&view_type=sm" % i, self.parse_greened_plan) #녹색경제신문_ESG기획
-            #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=556&box_idxno=&sc_section_code=S1N28&view_type=sm" % i, self.parse_greened_trend) #녹색경제신문_ESG동향
-            #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=3738&box_idxno=&sc_section_code=S1N29&view_type=sm" % i, self.parse_greened_economy) #녹색경제신문_함께하는경제
+            yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=556&box_idxno=&sc_section_code=S1N28&view_type=sm" % i, self.parse_greened_trend) #녹색경제신문_ESG동향
+            yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=3738&box_idxno=&sc_section_code=S1N29&view_type=sm" % i, self.parse_greened_economy) #녹색경제신문_함께하는경제
             #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=1836&box_idxno=&sc_section_code=S1N1&view_type=sm" % i, self.parse_impacton_indus) #임팩트온_산업
             #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=945&box_idxno=&sc_section_code=S1N2&view_type=sm" % i, self.parse_impacton_policy) #임팩트온_정책
             #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=657&box_idxno=&sc_section_code=S1N9&view_type=sm" % i, self.parse_impacton_inv) #임팩트온_투자&평가
@@ -36,7 +36,7 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_hankyungesg(self, response):
         for sel in response.xpath('//*[@id="container"]/div/div[1]/div[2]/div/div[2]/ul/li'):
             news_date = parse(sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip())
-            if self.now - news_date < dt.timedelta(days=2):
+            if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = sel.xpath('div[@class="txt-cont"]/h2/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip().split(maxsplit=1)[1]
@@ -169,7 +169,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'http://www.greened.kr' + sel.xpath('div[@class="list-titles"]/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].split(maxsplit=1)[1].strip()
-                item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
+                #item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
@@ -181,6 +181,7 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_greened_plan2(self, response):
         item = response.meta['item']
         item['site_subject'] = response.xpath('///*[@id="user-container"]/div[4]/header/div/div/text()').extract()[0].strip()
+        item['site_image'] = 'http://www.greened.kr' + response.xpath('.//div[@class="IMGFLOATING"]/img/@src').extract()[0].strip()
         for sel in response.xpath('//*[@id="articleBody"]'):
             item['site_content'] = sel.xpath('p/text()').extract()
 
@@ -194,7 +195,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'http://www.greened.kr' + sel.xpath('div[@class="list-titles"]/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].split(maxsplit=1)[1].strip()
-                item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
+                #item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
@@ -206,6 +207,7 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_greened_trend2(self, response):
         item = response.meta['item']
         item['site_subject'] = response.xpath('///*[@id="user-container"]/div[4]/header/div/div/text()').extract()[0].strip()
+        item['site_image'] = 'http://www.greened.kr' + response.xpath('.//div[@class="IMGFLOATING"]/img/@src').extract()[0].strip()
         for sel in response.xpath('//*[@id="articleBody"]'):
             item['site_content'] = sel.xpath('p/text()').extract()
 
@@ -219,7 +221,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'http://www.greened.kr' + sel.xpath('div[@class="list-titles"]/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].split(maxsplit=1)[1].strip()
-                item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
+                #item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
@@ -231,6 +233,7 @@ class NewsCrawlingSpider(scrapy.Spider):
     def parse_greened_economy2(self, response):
         item = response.meta['item']
         item['site_subject'] = response.xpath('///*[@id="user-container"]/div[4]/header/div/div/text()').extract()[0].strip()
+        item['site_image'] = 'http://www.greened.kr' + response.xpath('.//div[@class="IMGFLOATING"]/img/@src').extract()[0].strip()
         for sel in response.xpath('//*[@id="articleBody"]'):
             item['site_content'] = sel.xpath('p/text()').extract()
 
