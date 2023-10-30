@@ -65,7 +65,8 @@ ROBOTSTXT_OBEY = False
 ITEM_PIPELINES = {
     'test1.pipelines.ContentPipeline': 100,
     'test1.pipelines.WordPipeline': 200,
-    #'test1.pipelines.DatePipeline': 200,
+    'test1.pipelines.DatePipeline': 200,
+    'test1.pipelines.DuplicateItemFilterPipeline': 300,
 #숫자가 낮을 수록 우선순위
 }
 
