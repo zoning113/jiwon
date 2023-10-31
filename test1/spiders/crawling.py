@@ -39,7 +39,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = sel.xpath('div[@class="txt-cont"]/h2/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip() #date + time 으로 수정됨
+                item['created_at'] = sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip()
                 item['content_section'] = 'Gen'
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
@@ -70,7 +70,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.greenpostkorea.co.kr' + sel.xpath('.//div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1]
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0].strip()
                 item['content_section'] = 'E'
                 item['site_location'] = 'KR'
@@ -94,7 +94,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.greenpostkorea.co.kr' + sel.xpath('.//div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1]
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0].strip()
                 item['content_section'] = 'Gen'
                 item['site_location'] = 'KR'
@@ -118,7 +118,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.greenpostkorea.co.kr' + sel.xpath('.//div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1]
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0].strip()
                 item['content_section'] = 'Gen'
                 item['site_location'] = 'KR'
@@ -142,7 +142,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'http://www.hansbiz.co.kr' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1]
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a/img/@src').extract()[0].strip()
                 item['content_section'] = 'Gen'
                 item['site_location'] = 'KR'
@@ -167,7 +167,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'http://www.greened.kr' + sel.xpath('div[@class="list-titles"]/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].strip()
                 #item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
@@ -193,7 +193,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'http://www.greened.kr' + sel.xpath('div[@class="list-titles"]/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].strip()
                 #item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
@@ -219,7 +219,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'http://www.greened.kr' + sel.xpath('div[@class="list-titles"]/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="list-dated"]/text()').extract()[0].split('|')[2].strip()
                 #item['site_image'] = sel.xpath('.//div[@class="list-image"]/@style').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
@@ -245,7 +245,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.impacton.net' + sel.xpath('.//div[@class="view-cont"]/h2/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
@@ -270,7 +270,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.impacton.net' + sel.xpath('.//div[@class="view-cont"]/h2/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
@@ -295,7 +295,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.impacton.net' + sel.xpath('.//div[@class="view-cont"]/h2/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
@@ -321,7 +321,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.impacton.net' + sel.xpath('.//div[@class="view-cont"]/h2/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = 'Gen'
                 item['site_location'] = 'KR'
@@ -346,7 +346,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = 'E'
                 item['site_location'] = 'KR'
@@ -371,7 +371,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = 'E'
                 item['site_location'] = 'KR'
@@ -396,7 +396,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = 'E'
                 item['site_location'] = 'KR'
@@ -421,7 +421,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = 'S'
                 item['site_location'] = 'KR'
@@ -446,7 +446,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = 'G'
                 item['site_location'] = 'KR'
@@ -471,7 +471,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = 'Gen'
                 item['site_location'] = 'KR'
@@ -496,7 +496,7 @@ class NewsCrawlingSpider(scrapy.Spider):
             if self.now - news_date < dt.timedelta(days=1):
                 item = NewsCrawlingItem()
                 item['site_source'] = 'https://www.esgeconomy.com' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
-                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].split(maxsplit=1)[1].strip()
+                item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
@@ -528,7 +528,7 @@ class NewsCrawlingSpider(scrapy.Spider):
         item = response.meta['item']
         news_date = parse(response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip())
         if self.now - news_date < dt.timedelta(days=3):
-            item['created_at'] = response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].split(maxsplit=1)[1].strip()
+            item['created_at'] = response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip()
             item['site_image'] = response.xpath('p[@class="img-center"]/a/span/img/@src').extract()[0]
             item['content_section'] = None
             item['site_location'] = 'KR'
