@@ -5,12 +5,13 @@ from db_import import import_data_to_db
 
 # NLP
 from datetime import datetime, timedelta
+import hashlib
 
 
 # 1. 제목/내용 문장 잇기
 class ContentPipeline:
     def process_item(self, item, spider):
-        if 'site_content' in item:
+        if 'site_content' in item and 'site_subject' in item:
             item['site_content'] = [' '.join(text.strip() for text in item['site_content'] if text.strip())] #2번
         return item
 
@@ -25,45 +26,45 @@ class ContentPipeline:
 #date_formats 모든 형태 입력 & "%Y-%m-%d %H:%M" 통일 형태 논의
 class DatePipeline:
     def process_item(self, item, spider):
-        date_formats = ["%d-%m-%Y", "%Y-%m-%d", "%Y-%m-%d %H:%M:%S", "%d %B %Y", "%Y.%m.%d %H:%M"] 
+        if 'created_at' in item:
+            date_formats = ["%d-%m-%Y", "%Y-%m-%d", "%Y-%m-%d %H:%M:%S", "%d %B %Y", "%Y.%m.%d %H:%M"] 
+            date_str = item['created_at']
         
-        date_str = item['created_at']
-        
-        for date_format in date_formats:
-            try:
-                parsed_date = datetime.strptime(date_str, date_format)
-                item['created_at'] = parsed_date.strftime("%Y-%m-%d %H:%M") #시간이 없는 사이트 고려한다면 아래 코드 활용
-                #if date_format == "%Y-%m-%d %H:%M":
-                    #item['created_at'] = parsed_date.strftime("%Y-%m-%d %H:%M")
-                #else:
-                    #item['created_at'] = parsed_date.strftime("%Y-%m-%d")
-                return item
-                return item
-            except ValueError:
-                continue
+            for date_format in date_formats:
+                try:
+                    parsed_date = datetime.strptime(date_str, date_format)
+                    item['created_at'] = parsed_date.strftime("%Y-%m-%d %H:%M") #시간이 없는 사이트, '초' 없는 사이트 등 고려 필요
+                    #if date_format == "%Y-%m-%d %H:%M":
+                        #item['created_at'] = parsed_date.strftime("%Y-%m-%d %H:%M")
+                    #else:
+                        #item['created_at'] = parsed_date.strftime("%Y-%m-%d")
+                    return item
+                except ValueError:
+                    continue
 
-        return item
+            return item
 
 
 
 # 4. 중복 글 제거
-import hashlib
+#import hashlib
 class DuplicateItemFilterPipeline:
     def __init__(self):
         self.processed_items = set()
 
     def process_item(self, item, spider):
+        if 'site_source' in item:
         # Calculate a unique hash for the item, e.g., using its URL
         # 중복 글의 site_source 확인 필요
-        item_hash = hashlib.md5(item['site_source'].encode('utf-8')).hexdigest()
+            item_hash = hashlib.md5(item['site_source'].encode('utf-8')).hexdigest()
 
-        if item_hash in self.processed_items:
+            if item_hash in self.processed_items:
             # Skip processing if the item is a duplicate
-            raise DropItem(f"Duplicate item found: {item['site_source']}")
-        else:
+                raise DropItem(f"Duplicate item found: {item['site_source']}")
+            else:
             # Add the item's hash to the set to mark it as processed
-            self.processed_items.add(item_hash)
-            return item
+                self.processed_items.add(item_hash)
+                return item
 
 # 5. 키워드 중심으로 무관한 주제 글 제외
 # 크롤링 된 title 에서 불필요한 words 필터
@@ -71,7 +72,7 @@ class WordPipeline(object):
     words_to_filter = [u'PRO', u'[유튜브]', u'[채용 정보]', u'【알립니다】', u'podcast', u'Webinar', u'Exclusive Video:']
     def process_item(self, item, spider):
         for word in self.words_to_filter:
-            if any(key in item['site_subject'] for key in self.words_to_filter):
+            if 'site_subject' in item and any(key in item['site_subject'] for key in self.words_to_filter):
                 raise DropItem()
             else:
                 return item

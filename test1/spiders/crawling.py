@@ -9,26 +9,30 @@ class NewsCrawlingSpider(scrapy.Spider):
 
     # 크롤링 페이지를 요청한다 (페이지네이션으로 이루어진 페이지는 2 페이지까지 요청)
     def start_requests(self):
-        #yield scrapy.Request("https://www.newsway.co.kr/esg/environment", self.parse_newsway) #뉴스웨이
+        yield scrapy.Request("https://www.hankyung.com/esg/now", self.parse_hankyungesg_main) #한경ESG_main기사3개
+        yield scrapy.Request("https://www.newsway.co.kr/esg/environment", self.parse_newsway_env) #뉴스웨이_친환경
+        yield scrapy.Request("https://www.newsway.co.kr/esg/social", self.parse_newsway_soc) #뉴스웨이_사회적가치
+        yield scrapy.Request("https://www.newsway.co.kr/esg/governance", self.parse_newsway_gov) #뉴스웨이_투명경영
+        yield scrapy.Request("https://www.newsway.co.kr/esg/general", self.parse_newsway_gen) #뉴스웨이_ESG일반
         for i in range(1, 2):
             yield scrapy.Request("https://www.hankyung.com/esg/now?page=%d" % i, self.parse_hankyungesg)                          # 한경ESG
-            #yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=62324&box_idxno=&sc_section_code=S1N62&view_type=sm" % i, self.parse_gpkor_green)    #그린포스트코리아_녹색경제
-            #yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=4937&box_idxno=&sc_section_code=S1N61&view_type=sm" % i, self.parse_gpkor_esgmanage) #그린포스트코리아_ESG경영
-            #yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=9564&box_idxno=&sc_section_code=S1N65&view_type=sm" % i, self.parse_gpkor_esgfinance) #그린포스트코리아_ESG금융
-            #yield scrapy.Request("http://www.hansbiz.co.kr/news/articleList.html?page=%d&total=1228&box_idxno=&sc_section_code=S1N37&view_type=sm" % i, self.parse_hansbiz) #한스비즈
-            #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=2151&box_idxno=&sc_section_code=S1N18&view_type=sm" % i, self.parse_greened_plan) #녹색경제신문_ESG기획
-            #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=556&box_idxno=&sc_section_code=S1N28&view_type=sm" % i, self.parse_greened_trend) #녹색경제신문_ESG동향
-            #yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=3738&box_idxno=&sc_section_code=S1N29&view_type=sm" % i, self.parse_greened_economy) #녹색경제신문_함께하는경제
-            #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=1836&box_idxno=&sc_section_code=S1N1&view_type=sm" % i, self.parse_impacton_indus) #임팩트온_산업
-            #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=945&box_idxno=&sc_section_code=S1N2&view_type=sm" % i, self.parse_impacton_policy) #임팩트온_정책
-            #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=657&box_idxno=&sc_section_code=S1N9&view_type=sm" % i, self.parse_impacton_inv) #임팩트온_투자&평가
-            #yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=492&box_idxno=&sc_sub_section_code=S2N14&view_type=sm" % i, self.parse_impacton_issue) #임팩트온_이슈핫클립
-            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=1054&box_idxno=&sc_section_code=S1N1&view_type=sm" % i, self.parse_esgeconomy_sus) #ESG경제_지속가능경제
-            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=537&box_idxno=&sc_sub_section_code=S2N3&view_type=sm" % i, self.parse_esgeconomy_env) #ESG경제_환경
-            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=69&box_idxno=&sc_sub_section_code=S2N4&view_type=sm" % i, self.parse_esgeconomy_soc) #ESG경제_사회
-            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=861&box_idxno=&sc_section_code=S1N8&view_type=sm" % i, self.parse_esgeconomy_gov) #ESG경제_기업거버넌스
-            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=672&box_idxno=&sc_section_code=S1N5&view_type=sm" % i, self.parse_esgeconomy_ass) #ESG경제_공시평가
-            #yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=107&box_idxno=&sc_section_code=S1N7&view_type=sm" % i, self.parse_esgeconomy_opi) #ESG경제_오피니언
+            yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=62324&box_idxno=&sc_section_code=S1N62&view_type=sm" % i, self.parse_gpkor_green)    #그린포스트코리아_녹색경제
+            yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=4937&box_idxno=&sc_section_code=S1N61&view_type=sm" % i, self.parse_gpkor_esgmanage) #그린포스트코리아_ESG경영
+            yield scrapy.Request("https://www.greenpostkorea.co.kr/news/articleList.html?page=%d&total=9564&box_idxno=&sc_section_code=S1N65&view_type=sm" % i, self.parse_gpkor_esgfinance) #그린포스트코리아_ESG금융
+            yield scrapy.Request("http://www.hansbiz.co.kr/news/articleList.html?page=%d&total=1228&box_idxno=&sc_section_code=S1N37&view_type=sm" % i, self.parse_hansbiz) #한스비즈
+            yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=2151&box_idxno=&sc_section_code=S1N18&view_type=sm" % i, self.parse_greened_plan) #녹색경제신문_ESG기획
+            yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=556&box_idxno=&sc_section_code=S1N28&view_type=sm" % i, self.parse_greened_trend) #녹색경제신문_ESG동향
+            yield scrapy.Request("http://www.greened.kr/news/articleList.html?page=%d&total=3738&box_idxno=&sc_section_code=S1N29&view_type=sm" % i, self.parse_greened_economy) #녹색경제신문_함께하는경제
+            yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=1836&box_idxno=&sc_section_code=S1N1&view_type=sm" % i, self.parse_impacton_indus) #임팩트온_산업
+            yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=945&box_idxno=&sc_section_code=S1N2&view_type=sm" % i, self.parse_impacton_policy) #임팩트온_정책
+            yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=657&box_idxno=&sc_section_code=S1N9&view_type=sm" % i, self.parse_impacton_inv) #임팩트온_투자&평가
+            yield scrapy.Request("https://www.impacton.net/news/articleList.html?page=%d&total=492&box_idxno=&sc_sub_section_code=S2N14&view_type=sm" % i, self.parse_impacton_issue) #임팩트온_이슈핫클립
+            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=1054&box_idxno=&sc_section_code=S1N1&view_type=sm" % i, self.parse_esgeconomy_sus) #ESG경제_지속가능경제
+            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=537&box_idxno=&sc_sub_section_code=S2N3&view_type=sm" % i, self.parse_esgeconomy_env) #ESG경제_환경
+            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=69&box_idxno=&sc_sub_section_code=S2N4&view_type=sm" % i, self.parse_esgeconomy_soc) #ESG경제_사회
+            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=861&box_idxno=&sc_section_code=S1N8&view_type=sm" % i, self.parse_esgeconomy_gov) #ESG경제_기업거버넌스
+            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=672&box_idxno=&sc_section_code=S1N5&view_type=sm" % i, self.parse_esgeconomy_ass) #ESG경제_공시평가
+            yield scrapy.Request("https://www.esgeconomy.com/news/articleList.html?page=%d&total=107&box_idxno=&sc_section_code=S1N7&view_type=sm" % i, self.parse_esgeconomy_opi) #ESG경제_오피니언
 
 
     #한경ESG
@@ -40,7 +44,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item = NewsCrawlingItem()
                 item['site_source'] = sel.xpath('div[@class="txt-cont"]/h2/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="txt-cont"]/span/text()').extract()[0].strip()
-                item['content_section'] = 'Gen'
+                item['content_section'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
                 item['site_name'] = '한경ESG'
@@ -61,6 +65,49 @@ class NewsCrawlingSpider(scrapy.Spider):
         item['site_subject'] = response.xpath('//*[@id="container"]/div/div/article/h1/text()').extract()[0].strip()
         item['site_content'] = response.xpath('//*[@id="articletxt"]/text()').extract()
 
+        yield item
+
+   #한경_메인 //*[@id="container"]/div/div[1]/div[1]/article/div[1]/div[2]/h2/a //*[@id="container"]/div/div[1]/div[1]/div
+    def parse_hankyungesg_main(self, response):
+        #메인 중 메인
+        for sel in response.xpath('//*[@id="container"]/div/div[1]/div[1]'):
+            item = NewsCrawlingItem()
+            item['site_source'] = sel.xpath('.//div[@class="thumb"]/a/@href').extract()[0].strip()
+            item['site_image'] = sel.xpath('.//div[@class="thumb"]/a/img/@src').extract()[0]
+            item['content_section'] = None
+            item['site_location'] = 'KR'
+            item['contents_type'] = 'news'
+            item['site_name'] = '한경ESG'
+            item['site_subject'] = response.xpath('.//div[@class="main-headline"]/h2/a/text()').extract()[0].strip()
+
+            request = scrapy.Request(item['site_source'], callback=self.parse_hankyungesg_main2)
+            request.meta['item'] = item
+            yield request
+        
+        #메인 중 하위 두 기사
+        for sel in response.xpath('//*[@id="container"]/div/div[1]/div[1]/article/div'):
+            item = NewsCrawlingItem()
+            item['site_source'] = sel.xpath('.//div[@class="thumb"]/a/@href').extract()[0].strip()
+            item['site_image'] = sel.xpath('.//div[@class="thumb"]/a/img/@src').extract()[0]
+            item['content_section'] = None
+            item['site_location'] = 'KR'
+            item['contents_type'] = 'news'
+            item['site_name'] = '한경ESG'
+            #div[2] 제목이 div[1] 제목으로 수집됨
+            item['site_subject'] = response.xpath('.//div[@class="txt-cont"]/h2/a/text()').extract()[0].strip()
+            
+            request = scrapy.Request(item['site_source'], callback=self.parse_hankyungesg_main2)
+            request.meta['item'] = item
+            yield request
+
+    def parse_hankyungesg_main2(self, response):
+        item = response.meta['item']
+        news_date = parse(response.xpath('.//div[@class="datetime"]/span[1]/span/text()').extract()[0].strip())
+        if self.now - news_date < dt.timedelta(days=1):
+            item['created_at'] = response.xpath('.//div[@class="datetime"]/span[1]/span/text()').extract()[0].strip()
+            item['site_content'] = response.xpath('//*[@id="articletxt"]/text()').extract()   
+        else:
+            return
         yield item
 
     #그린포스트코리아_녹색경제
@@ -96,7 +143,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item['site_source'] = 'https://www.greenpostkorea.co.kr' + sel.xpath('.//div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0].strip()
-                item['content_section'] = 'Gen'
+                item['content_section'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
                 item['site_name'] = '그린포스트코리아'
@@ -144,7 +191,7 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item['site_source'] = 'http://www.hansbiz.co.kr' + sel.xpath('div[@class="view-cont"]/h4/a/@href').extract()[0].strip()
                 item['created_at'] = sel.xpath('.//div[@class="view-cont"]/span/em[3]/text()').extract()[0].strip()
                 item['site_image'] = sel.xpath('a/img/@src').extract()[0].strip()
-                item['content_section'] = 'Gen'
+                item['content_section'] = None
                 item['site_location'] = 'KR'
                 item['contents_type'] = 'news'
                 item['site_name'] = '한스경제'
@@ -500,7 +547,13 @@ class NewsCrawlingSpider(scrapy.Spider):
                 item['site_image'] = sel.xpath('a[@class="thumb"]/img/@src').extract()[0]
                 item['content_section'] = None
                 item['site_location'] = 'KR'
-                item['contents_type'] = None #알림/칼럼 분류 필요함
+                item['contents_type'] = sel.xpath('.//div[@class="view-cont"]/span/em[1]/text()').extract()[0].strip()
+                if item['contents_type'] == '칼럼':
+                    item['contents_type'] = 'column'
+                elif item['contents_type'] == '알림':
+                    item['contents_type'] = 'notice'
+                elif item['contents_type'] == '인터뷰':
+                    item['contents_type'] = 'interview'
                 item['site_name'] = 'ESG경제'
                 request = scrapy.Request(item['site_source'], callback=self.parse_esgeconomy_opi2)
                 request.meta['item'] = item
@@ -514,26 +567,110 @@ class NewsCrawlingSpider(scrapy.Spider):
 
         yield item
 
-    #뉴스웨이
-    def parse_newsway(self, response):
+    #뉴스웨이_친환경
+    def parse_newsway_env(self, response):
         for sel in response.xpath('//*[@id="content-right-left"]/div/article'):
             item = NewsCrawlingItem()
             item['site_source'] = 'https://www.newsway.co.kr' + sel.xpath('.//div[@class="news-text"]/a/@href').extract()[0].strip()
-            
-            request = scrapy.Request(item['site_source'], callback=self.parse_newsway2)
-            request.meta['item'] = item
-            yield request
-
-    def parse_newsway2(self, response):
-        item = response.meta['item']
-        news_date = parse(response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip())
-        if self.now - news_date < dt.timedelta(days=3):
-            item['created_at'] = response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip()
-            item['site_image'] = response.xpath('p[@class="img-center"]/a/span/img/@src').extract()[0]
-            item['content_section'] = None
+            item['site_image'] = sel.xpath('.//div[@class="news-image"]/figure/img/@src').extract()[0]
+            item['content_section'] = 'E'
             item['site_location'] = 'KR'
             item['contents_type'] = 'news'
             item['site_name'] = '뉴스웨이'
-            item['site_subject'] = response.xpath('.//div[@class="main-header"]/div[1]/p[2]/span/text()').extract()
+            item['site_subject'] = sel.xpath('.//div[@class="news-text"]/a/p[1]/span/text()').extract()
+            
+            request = scrapy.Request(item['site_source'], callback=self.parse_newsway_env2)
+            request.meta['item'] = item
+            yield request
 
+    def parse_newsway_env2(self, response):
+        item = response.meta['item']
+        news_date = parse(response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip())
+        if self.now - news_date < dt.timedelta(days=1):
+            item['created_at'] = response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip()
+            for sel in response.xpath('//*[@id="container"]'):
+                item['site_content'] = sel.xpath('div/section[3]/div/div/div/div[1]/div/article/div[2]/text()').extract()    
+        else:
+            return
+        yield item
+
+    #뉴스웨이_사회적가치
+    def parse_newsway_soc(self, response):
+        for sel in response.xpath('//*[@id="content-right-left"]/div/article'):
+            item = NewsCrawlingItem()
+            item['site_source'] = 'https://www.newsway.co.kr' + sel.xpath('.//div[@class="news-text"]/a/@href').extract()[0].strip()
+            item['site_image'] = sel.xpath('.//div[@class="news-image"]/figure/img/@src').extract()[0]
+            item['content_section'] = 'S'
+            item['site_location'] = 'KR'
+            item['contents_type'] = 'news'
+            item['site_name'] = '뉴스웨이'
+            item['site_subject'] = sel.xpath('.//div[@class="news-text"]/a/p[1]/span/text()').extract()
+            
+            request = scrapy.Request(item['site_source'], callback=self.parse_newsway_soc2)
+            request.meta['item'] = item
+            yield request
+
+    def parse_newsway_soc2(self, response):
+        item = response.meta['item']
+        news_date = parse(response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip())
+        if self.now - news_date < dt.timedelta(days=1):
+            item['created_at'] = response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip()
+            for sel in response.xpath('//*[@id="container"]'):
+                item['site_content'] = sel.xpath('div/section[3]/div/div/div/div[1]/div/article/div[2]/text()').extract()    
+        else:
+            return
+        yield item
+
+    #뉴스웨이_투명경영
+    def parse_newsway_gov(self, response):
+        for sel in response.xpath('//*[@id="content-right-left"]/div/article'):
+            item = NewsCrawlingItem()
+            item['site_source'] = 'https://www.newsway.co.kr' + sel.xpath('.//div[@class="news-text"]/a/@href').extract()[0].strip()
+            item['site_image'] = sel.xpath('.//div[@class="news-image"]/figure/img/@src').extract()[0]
+            item['content_section'] = 'G'
+            item['site_location'] = 'KR'
+            item['contents_type'] = 'news'
+            item['site_name'] = '뉴스웨이'
+            item['site_subject'] = sel.xpath('.//div[@class="news-text"]/a/p[1]/span/text()').extract()
+            
+            request = scrapy.Request(item['site_source'], callback=self.parse_newsway_gov2)
+            request.meta['item'] = item
+            yield request
+
+    def parse_newsway_gov2(self, response):
+        item = response.meta['item']
+        news_date = parse(response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip())
+        if self.now - news_date < dt.timedelta(days=1):
+            item['created_at'] = response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip()
+            for sel in response.xpath('//*[@id="container"]'):
+                item['site_content'] = sel.xpath('div/section[3]/div/div/div/div[1]/div/article/div[2]/text()').extract()    
+        else:
+            return
+        yield item
+
+    #뉴스웨이_ESG일반 #대부분 ESG평가/공시에 대한 내용으로 우선 'Gen'으로 분류
+    def parse_newsway_gen(self, response):
+        for sel in response.xpath('//*[@id="content-right-left"]/div/article'):
+            item = NewsCrawlingItem()
+            item['site_source'] = 'https://www.newsway.co.kr' + sel.xpath('.//div[@class="news-text"]/a/@href').extract()[0].strip()
+            item['site_image'] = sel.xpath('.//div[@class="news-image"]/figure/img/@src').extract()[0]
+            item['content_section'] = 'Gen'
+            item['site_location'] = 'KR'
+            item['contents_type'] = 'news'
+            item['site_name'] = '뉴스웨이'
+            item['site_subject'] = sel.xpath('.//div[@class="news-text"]/a/p[1]/span/text()').extract()
+            
+            request = scrapy.Request(item['site_source'], callback=self.parse_newsway_gen2)
+            request.meta['item'] = item
+            yield request
+
+    def parse_newsway_gen2(self, response):
+        item = response.meta['item']
+        news_date = parse(response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip())
+        if self.now - news_date < dt.timedelta(days=1):
+            item['created_at'] = response.xpath('.//div[@class="view-date"]/p/span[2]/text()').extract()[0].strip()
+            for sel in response.xpath('//*[@id="container"]'):
+                item['site_content'] = sel.xpath('div/section[3]/div/div/div/div[1]/div/article/div[2]/text()').extract()    
+        else:
+            return
         yield item
